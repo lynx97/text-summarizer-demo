@@ -1,0 +1,81 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Summerization</title>
+</head>
+<body>
+    <div class="content">
+        <div class="logo"><h1>Tóm tắt văn bản</h1></div>
+        <div class="search">
+            <div class="row">
+                <div class="col-md-6">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <textarea class="form-control" rows="10" type="text" placeholder="Nhập nội dung cần tóm tắt" id="original_text" required></textarea>
+                        <button id="btn_submit" type="button">Thực hiện</button>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <div style="border: dotted 1px; text-align: left;padding: 10px;" id="result">
+
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $('#btn_submit').on('click', function(e){
+        e.preventDefault();
+        var text = $('#original_text').val();
+        $.ajax({
+            url: 'summarize/',
+            data: {
+                'original_text': text,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            method: 'POST',
+            success: function (data) {
+                console.log(data.result);
+                document.getElementById("result").innerHTML = data.result;
+            }
+        });
+    });
+</script>
+<style>
+    body{
+        font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+    }
+    .content{
+        text-align: center;
+    }
+    .logo h1{
+        font-size: 40px;
+    }
+    .search input{
+        font-size: 16px;
+        width: 400px;
+        height: 46px;
+        border: 1px solid rgb(223, 225, 229);
+        line-height: 21px;
+        padding-left: 25px;
+    }
+    .search button{
+        height: 51px;
+        border: 1px solid rgb(223, 225, 229);
+        background: #3578E5;
+        cursor: pointer;
+        color: white;
+        transition: all 0.5s;
+    }
+    .search button:hover{
+        background: black;
+
+    }
+</style>
