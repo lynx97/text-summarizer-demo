@@ -17,6 +17,8 @@
                     <form action="" method="POST">
                         {% csrf_token %}
                         <textarea class="form-control" rows="20" type="text" placeholder="Nhập nội dung cần tóm tắt" id="original_text" required></textarea>
+                        <label for="num_cluster"> Nhập số câu </label>
+                        <input type="number" id="num_cluster">
                         <button id="btn_submit" type="button">Thực hiện</button>
                     </form>
                 </div>
@@ -43,6 +45,7 @@
             url: 'summarize/',
             data: {
                 'original_text': text,
+                'num_cluster': $('#num_cluster').val(),
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             method: 'POST',

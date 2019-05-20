@@ -21,20 +21,30 @@ def index(request):
 
 def summarize(request):
     original_text = request.POST.get('original_text','')
-
+    
+    try:
+        num_cluster = int(request.POST.get('num_cluster',''))
+    except ValueError:
+        num_cluster = None
     X, sentences = sent_embedding(original_text)
 
-    summary_s2v = k_mean_clustering(X, int(np.sqrt(len(sentences))), sentences)
+    if num_cluster == None:
+        num_cluster = int(np.sqrt(len(sentences)))
+
+    print("num cluster = ",num_cluster)
+
+    summary_s2v = k_mean_clustering(X, num_cluster, sentences)
 
     X = sent_embedding_with_w2v(original_text, sentences)
-    summary_w2v = k_mean_clustering(X, int(np.sqrt(len(sentences))), sentences)
+    summary_w2v = k_mean_clustering(X, num_cluster, sentences)
 
     data = {'result_w2v': summary_w2v, 'result_s2v': summary_s2v}
     return JsonResponse(data)
 
 def preprocessText(text):
     contents_parsed = text.lower() #Biến đổi hết thành chữ thường
-    # contents_parsed = contents_parsed.replace('\n', '. ') #Đổi các ký tự xuống dòng thành chấm câu
+    contents_parsed = contents_parsed.replace('.', '. ') 
+    contents_parsed = contents_parsed.replace('?', '? ') 
     contents_parsed = contents_parsed.strip() #Loại bỏ đi các khoảng trắng thừa
     return contents_parsed
 
@@ -73,7 +83,7 @@ def k_mean_clustering(X, n_clusters, sentences):
     
     # for s in sentences:
     #     print(s)
-    print(len(sentences))
+    # print(len(sentences))
 
 
     kmeans = KMeans(n_clusters=n_clusters)
