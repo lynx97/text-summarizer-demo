@@ -16,14 +16,19 @@
                 <div class="col-md-6">
                     <form action="" method="POST">
                         {% csrf_token %}
-                        <textarea class="form-control" rows="10" type="text" placeholder="Nhập nội dung cần tóm tắt" id="original_text" required></textarea>
+                        <textarea class="form-control" rows="20" type="text" placeholder="Nhập nội dung cần tóm tắt" id="original_text" required></textarea>
                         <button id="btn_submit" type="button">Thực hiện</button>
                     </form>
                 </div>
                 <div class="col-md-6">
-                    <div style="border: dotted 1px; text-align: left;padding: 10px;" id="result">
+                    <h3>Word to Vector</h3>
+                    <div style="border: dotted 1px; text-align: left;padding: 10px;" id="result-w2v">
 
-                    </div>                    
+                    </div>
+                    <h3>Sentences to Vector</h3>
+                    <div style="border: dotted 1px; text-align: left;padding: 10px;" id="result-s2v">
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,7 +48,8 @@
             method: 'POST',
             success: function (data) {
                 console.log(data.result);
-                document.getElementById("result").innerHTML = data.result;
+                document.getElementById("result-w2v").innerHTML = data.result_w2v;
+                document.getElementById("result-s2v").innerHTML = data.result_s2v;
             }
         });
     });
